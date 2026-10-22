@@ -1,6 +1,6 @@
-# Session 10 Group 4 — Phishing URL Detector
+# phishing-Website
 
-COS30049 Assignment 3. React front end, FastAPI back end.
+Session 10 Group 4 — COS30049 Assignment 3. React front end, FastAPI back end.
 
 ```text
 frontend/   React app
