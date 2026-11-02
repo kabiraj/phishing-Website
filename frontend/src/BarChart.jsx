@@ -50,8 +50,14 @@ function BarChart({ data, xKey, yKey, colorFor, tooltipFor, onBarClick }) {
         .append('g')
         .attr('transform', `translate(0,${innerHeight})`)
         .call(d3.axisBottom(x))
+        .selectAll('text')
+        .attr('fill', '#02070a')
 
-      plot.append('g').call(d3.axisLeft(y).ticks(5).tickFormat((tick) => `${tick}%`))
+      plot
+        .append('g')
+        .call(d3.axisLeft(y).ticks(5).tickFormat((tick) => `${tick}%`))
+        .selectAll('text')
+        .attr('fill', '#02070a')
 
       const tip = d3.select(frame).append('div').attr('class', 'd3-tip')
 
@@ -66,6 +72,18 @@ function BarChart({ data, xKey, yKey, colorFor, tooltipFor, onBarClick }) {
         .attr('rx', 8)
         .attr('fill', (row) => colorRef.current(row))
         .attr('cursor', clickRef.current ? 'pointer' : 'default')
+        .attr('tabindex', clickRef.current ? 0 : null)
+        .attr('role', clickRef.current ? 'button' : null)
+        .attr('aria-label', (row) => tooltipRef.current(row))
+        .on('keydown', (event, row) => {
+          if (!clickRef.current) {
+            return
+          }
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            clickRef.current(row)
+          }
+        })
         .on('mousemove', (event, row) => {
           tip
             .style('opacity', 1)

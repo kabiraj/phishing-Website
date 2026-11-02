@@ -47,65 +47,71 @@ function App() {
 
   return (
     <main className={current ? 'page page-wide' : 'page'}>
-      <h1>Phishing URL Check</h1>
-      <p className="lead">Paste your URL below</p>
-      <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="url">URL</label>
-        <input
-          id="url"
-          name="url"
-          type="url"
-          placeholder="https://example.com/login"
-          autoComplete="url"
-          value={url}
-          disabled={status === 'loading'}
-          onChange={(event) => {
-            setUrl(event.target.value)
-            if (status === 'failed') {
-              setStatus('idle')
-            }
-          }}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? 'url-error' : undefined}
-        />
-        {error ? (
-          <p id="url-error" className="error" role="alert">
-            {error}
-          </p>
+      <div className={current ? 'split split-wide' : 'split'}>
+        <div className="check">
+          <h1>
+            <span>Phishing</span> URL Check
+          </h1>
+          <p className="lead">Paste your URL below</p>
+          <form onSubmit={handleSubmit} noValidate>
+            <label htmlFor="url">URL</label>
+            <input
+              id="url"
+              name="url"
+              type="url"
+              placeholder="https://example.com/login"
+              autoComplete="url"
+              value={url}
+              disabled={status === 'loading'}
+              onChange={(event) => {
+                setUrl(event.target.value)
+                if (status === 'failed') {
+                  setStatus('idle')
+                }
+              }}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'url-error' : undefined}
+            />
+            {error ? (
+              <p id="url-error" className="error" role="alert">
+                {error}
+              </p>
+            ) : null}
+            <button type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'Checking…' : 'Check URL'}
+            </button>
+          </form>
+
+          {status === 'loading' ? (
+            <div className="status" role="status" aria-live="polite">
+              <span className="spinner" aria-hidden="true" />
+              <p>Checking this URL…</p>
+            </div>
+          ) : null}
+
+          {status === 'failed' ? (
+            <div className="status status-failed" role="alert">
+              <h2>Check failed</h2>
+              <p>The check could not be completed. Try another URL, or try again.</p>
+            </div>
+          ) : null}
+        </div>
+
+        {status === 'success' && current ? (
+          <Results
+            current={current}
+            history={history}
+            usingSample={usingSample}
+            onSelect={(id) => {
+              const chosen = history.find((item) => item.id === id)
+              if (chosen) {
+                setCurrent(chosen)
+                setUrl(chosen.url)
+              }
+            }}
+          />
         ) : null}
-        <button type="submit" disabled={status === 'loading'}>
-          {status === 'loading' ? 'Checking…' : 'Check URL'}
-        </button>
-      </form>
-
-      {status === 'loading' ? (
-        <div className="status" role="status" aria-live="polite">
-          <span className="spinner" aria-hidden="true" />
-          <p>Checking this URL…</p>
-        </div>
-      ) : null}
-
-      {status === 'failed' ? (
-        <div className="status status-failed" role="alert">
-          <h2>Check failed</h2>
-          <p>The check could not be completed. Try another URL, or try again.</p>
-        </div>
-      ) : null}
-
-      {status === 'success' && current ? (
-        <Results
-          current={current}
-          history={history}
-          usingSample={usingSample}
-          onSelect={(id) => {
-            const chosen = history.find((item) => item.id === id)
-            if (chosen) {
-              setCurrent(chosen)
-              setUrl(chosen.url)
-            }
-          }}
-        />
-      ) : null}
+      </div>
     </main>
   )
 }

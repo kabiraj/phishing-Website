@@ -41,9 +41,19 @@ function Results({ current, history, onSelect, usingSample }) {
             data={thisCheck}
             xKey="name"
             yKey="value"
-            colorFor={(row) => (row.name === 'Phishing' ? '#c45a10' : '#248a3d')}
+            colorFor={(row) => (row.name === 'Phishing' ? '#FC734D' : '#0297DE')}
             tooltipFor={(row) => `${row.name}: ${row.value}%`}
           />
+          <ul className="legend">
+            <li>
+              <span className="swatch swatch-phishing" />
+              Phishing
+            </li>
+            <li>
+              <span className="swatch swatch-legitimate" />
+              Legitimate
+            </li>
+          </ul>
         </figure>
 
         <figure className="chart">
@@ -55,10 +65,20 @@ function Results({ current, history, onSelect, usingSample }) {
             data={session}
             xKey="name"
             yKey="confidence"
-            colorFor={(row) => (row.id === current.id ? '#8a3d00' : '#f69c40')}
+            colorFor={(row) => (row.id === current.id ? '#0297DE' : '#FC734D')}
             tooltipFor={(row) => `${row.url} — ${row.prediction} ${row.confidence}%`}
             onBarClick={(row) => onSelect(row.id)}
           />
+          <ul className="legend">
+            <li>
+              <span className="swatch swatch-current" />
+              Selected check
+            </li>
+            <li>
+              <span className="swatch swatch-other" />
+              Other checks this session
+            </li>
+          </ul>
           <ul className="session-list">
             {history.map((item, index) => (
               <li key={item.id}>
